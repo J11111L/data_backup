@@ -4,15 +4,15 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
 {
-
-    //界面初始化
+    findSource = false;
+    findTarget = false;
     ui->setupUi(this);
     QStringList filters;
-    filters << "*";//<< "*.cpp" << "*.h" << "*.txt" << "*.md";
+    filters << "*";
 
     m_fsmodel = new QFileSystemModel(this);
     m_fsmodel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs | QDir::Files);
@@ -23,12 +23,15 @@ MainWindow::MainWindow(QWidget *parent)
     m_fsmodel->setRootPath(QDir::homePath());
 
     ui->treeView->setModel(m_fsmodel);
-    //只显示名称列，隐藏大小类型修改日期
     ui->treeView->setColumnHidden(1,true);
     ui->treeView->setColumnHidden(2,true);
     ui->treeView->setColumnHidden(3,true);
     ui->treeView->setRootIndex(m_fsmodel->index(QDir::homePath()));
-    connect(ui->closebutton, SIGNAL(clicked()), this, SLOT(close()));
+    ui->treeView->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->treeView->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    connect(ui->treeView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
+            this, SLOT(on_treeView_selectionChanged()));
 
 }
 
@@ -37,18 +40,27 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::updateRootPath(const QString& newPath)
 {
-    this->close();
-    input *inputui = new input();
-    inputui->show();
+    if (!newPath.isEmpty() && QDir(newPath).exists())
+    {
+        m_fsmodel->setRootPath(newPath);
+        ui->treeView->setRootIndex(m_fsmodel->index(newPath));
+    }
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_treeView_selectionChanged()
 {
-    this->close();
-    backup *backupui = new  backup();
-    backupui->show();
+    QModelIndexList selectedIndexes = ui->treeView->selectionModel()->selectedIndexes();
+    
+    if (!selectedIndexes.isEmpty())
+    {
+        QModelIndex selectedIndex = selectedIndexes.first();
+        
+        m_selectedPath = m_fsmodel->filePath(selectedIndex);
+    } else {
+        m_selectedPath = "";
+    }
 }
 
 #endif // MAINWINDOW_CPP

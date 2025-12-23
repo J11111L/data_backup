@@ -19,8 +19,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     input.cpp \
-    othermenu.cpp \
-    backup.cpp
+    backup.cpp \
+    controler.cpp
 
 
 HEADERS += \
@@ -28,13 +28,12 @@ HEADERS += \
     utils.h \
     mainwindow.h \
     input.h \
-    othermenu.h \
-    backup.h
+    backup.h \
+    controler.h
 
 FORMS += \
     mainwindow.ui \
     input.ui \
-    othermenu.ui \
     backup.ui
 
 # Default rules for deployment.

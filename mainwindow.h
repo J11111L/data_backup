@@ -2,11 +2,12 @@
 #define MAINWINDOW_H
 
 #include "utils.h"
-#include "input.h"
-#include "backup.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui
+{ 
+    class MainWindow;
+}
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -14,18 +15,21 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    Ui::MainWindow *ui;
+    bool findSource;
+    bool findTarget;
+    QString m_selectedPath;
+
     MainWindow(QWidget *parent = nullptr);
+
     ~MainWindow();
-
-
+    
+    void updateRootPath(const QString& newPath);
 
 private slots:
-    void on_pushButton_clicked();
-
-    void on_pushButton_2_clicked();
+    void on_treeView_selectionChanged();
 
 private:
-    Ui::MainWindow *ui;
     QFileSystemModel* m_fsmodel;
 };
 

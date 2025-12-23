@@ -11,7 +11,7 @@
   </rect>
  </property>
  <property name="windowTitle">
-  <string>目录选择</string>
+  <string>选择路径</string>
  </property>
  <widget class="QWidget" name="centralwidget">
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -72,7 +72,7 @@
          </size>
         </property>
         <property name="text">
-         <string>菜单</string>
+         <string>确认</string>
         </property>
        </widget>
       </item>
@@ -90,7 +90,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="closebutton">
+       <widget class="QPushButton" name="pushButton_3">
         <property name="minimumSize">
          <size>
           <width>150</width>
@@ -98,7 +98,7 @@
          </size>
         </property>
         <property name="text">
-         <string>退出</string>
+         <string>返回</string>
         </property>
        </widget>
       </item>

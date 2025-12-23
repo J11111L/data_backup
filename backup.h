@@ -2,7 +2,6 @@
 #define BACKUP_H
 
 #include "utils.h"
-#include "mainwindow.h"
 //#include "advanced.h"
 //#include "compressANDdecompress.h"
 //#include "encryptANDdecode.h"
@@ -11,25 +10,31 @@
 //#include "warning.h"
 //#include "output.h"
 
-namespace Ui {
-class backup;
+QT_BEGIN_NAMESPACE
+namespace Ui
+{
+    class backup;
 }
+QT_END_NAMESPACE
 
 class backup : public QWidget
 {
     Q_OBJECT
 
 public:
+    Ui::backup *backupui;
+
     explicit backup(QWidget *parent = nullptr);
+
     ~backup();
-
-private slots:
-    void on_pushButton_2_clicked();
-
-    void on_pushButton_clicked();
+    
+    void updateSourcePath(const QString& newPath);
+    
+    void updateTargetPath(const QString& newPath);
 
 private:
-    Ui::backup *backupui;
+    void on_pushButton_clicked();
+    
 };
 
 #endif // BACKUP_H

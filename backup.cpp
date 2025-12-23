@@ -13,18 +13,22 @@ backup::backup(QWidget *parent) :
     backupui(new Ui::backup)
 {
     backupui->setupUi(this);
+    connect(backupui->pushButton, &QPushButton::clicked, this, &backup::on_pushButton_clicked);
+}
+
+void backup::updateSourcePath(const QString& newPath)
+{
+    backupui->textEdit->setText(newPath);
+}
+
+void backup::updateTargetPath(const QString& newPath)
+{
+    backupui->textEdit_2->setText(newPath);
 }
 
 backup::~backup()
 {
     delete backupui;
-}
-
-void backup::on_pushButton_2_clicked()
-{
-    MainWindow *ui = new MainWindow();
-    this->close();
-    ui->show();
 }
 
 void backup::on_pushButton_clicked()
@@ -163,45 +167,8 @@ void backup::on_pushButton_clicked()
         // ADBackuper ADworker;
         // ADworker.ADmoveFileOrDir(sourceDirOrFile, targetDir);
     }
-    //compare
-    if (backupui->radioButton_6->isChecked())
-    {
-        cout << "暂不支持目录比较功能，敬请期待！\n";
-        // if (access(sourceDirOrFile.c_str(), F_OK))
-        // {
-        //     cout << "输入目录" << sourceDirOrFile << "不存在，请检查后重新输入\n";
-        // }
-
-        // if (access(targetDir.c_str(), F_OK))
-        // {
-        //     cout << "输入目录" << targetDir << "不存在，请检查后重新输入\n";
-        // }
-
-        // ADBackuper ADworker;
-        // ADworker.compareDirectories(sourceDirOrFile, targetDir);
-
-        /*QProcess *process = new QProcess();
-        process->setProgram("ls");
-        process->setArguments(QStringList() << "-1" << ".");
-        process->start();
-        if (!process->waitForStarted())
-        {
-            qDebug() << "Failed to strat process.";
-            return;
-        }
-        if (!process->waitForStarted())
-        {
-            qDebug() << "Failed to finish process.";
-            return;
-        }
-        QString out = process->readAll();
-        qDebug() << out;
-        output *ui = new output();
-        this->close();
-        ui->label->setText(out);*/
-    }
     //pack
-    if (backupui->radioButton_7->isChecked())
+    if (backupui->radioButton_6->isChecked())
     {
         cout << "暂不支持打包功能，敬请期待！\n";
         // if (access(sourceDirOrFile.c_str(), F_OK) || user.EmptyDir(sourceDirOrFile))
@@ -217,7 +184,7 @@ void backup::on_pushButton_clicked()
         // }
     }
     //unpack
-    if (backupui->radioButton_8->isChecked())
+    if (backupui->radioButton_7->isChecked())
     {
         cout << "暂不支持解包功能，敬请期待！\n";
         // if (access(sourceDirOrFile.c_str(), F_OK))
@@ -237,7 +204,7 @@ void backup::on_pushButton_clicked()
         // }
     }
     //compress
-    if (backupui->radioButton_9->isChecked())
+    if (backupui->radioButton_8->isChecked())
     {
         cout << "暂不支持压缩功能，敬请期待！\n";
         // if (access(sourceDirOrFile.c_str(), F_OK))
@@ -253,7 +220,7 @@ void backup::on_pushButton_clicked()
         // }
     }
     //decompress
-    if (backupui->radioButton_10->isChecked())
+    if (backupui->radioButton_9->isChecked())
     {
         cout << "暂不支持解压功能，敬请期待！\n";
         // if (access(sourceDirOrFile.c_str(), F_OK))
@@ -272,7 +239,7 @@ void backup::on_pushButton_clicked()
         // compress_worker cpworker;
     }
     //encrypt
-    if (backupui->radioButton_11->isChecked())
+    if (backupui->radioButton_10->isChecked())
     {
         cout << "暂不支持加密功能，敬请期待！\n";
         // if (access(sourceDirOrFile.c_str(), F_OK))
@@ -296,7 +263,7 @@ void backup::on_pushButton_clicked()
         // }
     }
     //decrypt
-    if (backupui->radioButton_12->isChecked())
+    if (backupui->radioButton_11->isChecked())
     {
         cout << "暂不支持解密功能，敬请期待！\n";
         // if (access(sourceDirOrFile.c_str(), F_OK))
@@ -319,8 +286,4 @@ void backup::on_pushButton_clicked()
         //     worker.decryptFile(md5, md5md5, sourceDirOrFile, targetDir);
         // }
     }
-
-    MainWindow *ui = new MainWindow();
-    this->close();
-    ui->show();
 }

@@ -3,9 +3,13 @@
 
 #include <QDir>
 #include <QDebug>
+#include <QTimer>
 #include <QWidget>
 #include <QProcess>
+#include <QFileInfo>
 #include <QMainWindow>
+#include <QMessageBox>
+#include <QFileDialog>
 #include <QApplication>
 #include <QFileSystemModel>
 #include <iostream>

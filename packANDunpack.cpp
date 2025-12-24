@@ -51,8 +51,11 @@ headblock *pack_worker::genHeader(string filename)
 	long mtimesec, mtimensec;
 	string mtimesecstring, mtimensecstring;
 	char sylinkname[100];
-	// 存储文件名
-	strcpy(head.name, filename.c_str());
+	// 存储相对路径
+	string relpath;
+	size_t pos = filename.find(rootname);
+	relpath = filename.substr(pos);
+	strcpy(head.name, relpath.c_str());
 	// 存储文件st_mode,事实上已经包含用户权限和文件类型
 	strcpy(head.mode, (to_string(srcbuf.st_mode)).c_str());
 	// 存储用户ID
@@ -75,10 +78,13 @@ headblock *pack_worker::genHeader(string filename)
 		head.typeflag = '1';
 		if (readlink(filename.c_str(), sylinkname, srcbuf.st_size) != -1)
 		{
-			//cout << "读取链接成功\n";
+			// cout << "读取链接成功\n";
 		}
 		else
-			perror("link");
+		{
+			QMessageBox::warning(nullptr, "警告", "打包过程中读取软链接失败！");
+			// perror("link");
+		}
 	}
 	if (S_ISFIFO(srcbuf.st_mode))
 		head.typeflag = '2';
@@ -102,7 +108,7 @@ bool pack_worker::addFileToBag(string dirname, int bagfile)
 	struct dirent *entry;
 	struct stat statbuf;
 	headblock *head;
-	//cout << "当前打包" << dirname << endl;
+	cout << "当前打包" << dirname << endl;
 
 	// 首先写入当前目录的头结点
 	head = genHeader(dirname);
@@ -182,16 +188,65 @@ bool pack_worker::packDir(string sourcedir, string targetbag)
 	int fout;
 	headblock *head;
 	char flag[BLOCKSIZE] = {'\0'};
-	targetbag += ".bo";
+	//找到源目录的最后一部分名字，作为打包文件名的起始位置
+	size_t pos = sourcedir.find_last_of('/');
+	if (pos != string::npos)
+	{
+		rootname = sourcedir.substr(pos + 1);
+	}
+	else{
+		rootname = sourcedir;
+	}
+	string targetname = rootname;
+	//如果是文件需要去掉后缀
+	pos = rootname.find_last_of('.');
+	if (pos != string::npos)
+	{
+		targetname = rootname.substr(0, pos);
+	}
+	targetbag += "/" + targetname +".bo";
 	if ((fout = open(targetbag.c_str(), O_RDWR | O_CREAT | O_TRUNC | O_APPEND, 0644)) < 0)
 	{
 		QMessageBox::warning(nullptr, "警告", "打包文件创建失败，打包退出！");
 		return false;
 	}
+	// 处理单个文件
+	struct stat statbuf;
+	lstat(sourcedir.c_str(), &statbuf);
+	if(S_ISREG(statbuf.st_mode))
+	{
+		// 如果是普通文件，直接打包该文件
+		head = genHeader(sourcedir);
+		write(fout, head, BLOCKSIZE);
+		int fin = open(sourcedir.c_str(), O_RDONLY);
+		char buffer[BLOCKSIZE];
+		// 文件比一个块大，才多次读入，否则一次读写即可
+		if (statbuf.st_size > BLOCKSIZE)
+		{
+			for (int i = 0; i < (statbuf.st_size / BLOCKSIZE) - 1; i++)
+			{
+				read(fin, buffer, BLOCKSIZE);
+				write(fout, buffer, BLOCKSIZE);
+			}
+			// 最后一次读写补零
+			read(fin, buffer, statbuf.st_size % BLOCKSIZE);
+			write(fout, buffer, statbuf.st_size % BLOCKSIZE);
+			write(fout, flag, BLOCKSIZE - statbuf.st_size % BLOCKSIZE); // 末尾补零
+		}
+		else
+		{
+			read(fin, buffer, statbuf.st_size);
+			write(fout, buffer, statbuf.st_size);
+			write(fout, flag, BLOCKSIZE - statbuf.st_size);
+		}
+		close(fin);
+		close(fout);
+		return true;
+	}
 	// 打开目录并返回存储目录信息的DIR结构体
 	if ((dp = opendir(sourcedir.c_str())) == NULL)
 	{
-		QMessageBox::warning(nullptr, "警告", "打包过程中目录打开失败！");
+		QMessageBox::warning(nullptr, "警告", "打包过程中目录或文件打开失败！");
 		return false;
 	}
 	if (addFileToBag(sourcedir, fout))
@@ -226,6 +281,7 @@ bool pack_worker::turnBagToFile(int sourcebag, string targetdir)
 		times[0].tv_sec = time_t(atol(head->mtime_sec));
 		times[0].tv_nsec = atol(head->mtime_nsec);
 		times[1] = times[0];
+
 		filepath = targetdir + '/' + head->name;
 		// 读到普通文件的头结点，生成对应普通文件
 		if (head->typeflag == '0')

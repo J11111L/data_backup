@@ -33,6 +33,9 @@ public:
     bool unpackBag(string sourcebag, string targetdir); // 解包
 
     bool turnBagToFile(int sourcebag, string targetdir); // 递归拆包
+
+private:
+    string rootname; // 记录打包的根目录，便于解包时还原目录结构
 };
 
 #endif

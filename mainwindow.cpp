@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     filters << "*";
 
     m_fsmodel = new QFileSystemModel(this);
-    m_fsmodel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs | QDir::Files);
+    m_fsmodel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs | QDir::Files | QDir::System);
     m_fsmodel->setNameFilters(filters);
     m_fsmodel->setNameFilterDisables(false);
     m_fsmodel->sort(0, Qt::AscendingOrder);

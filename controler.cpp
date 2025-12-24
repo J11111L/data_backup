@@ -338,7 +338,7 @@ void Controler::on_backupButton_clicked()
             bool success = cpworker.compress(sourceDirOrFile, targetDir);
             if(success)
             {
-                QMessageBox::information(this, "", "解包完成！");
+                QMessageBox::information(this, "", "压缩完成！");
             }
         }
     }
@@ -360,7 +360,7 @@ void Controler::on_backupButton_clicked()
             bool success = cpworker.decompress(sourceDirOrFile, targetDir);
             if(success)
             {
-                QMessageBox::information(this, "", "解包完成！");
+                QMessageBox::information(this, "", "解压完成！");
             }
         }
     }

@@ -37,7 +37,10 @@ bool compress_worker::compress(string sourcefile, string targetfile)
         QMessageBox::warning(nullptr,"错误","源文件打开失败");
         return false; // 打开源文件失败
     }
-    string newFileName = targetfile + ".co";
+    size_t pos = sourcefile.find_last_of("/");
+    size_t pos2 = sourcefile.find_last_of(".");
+    string targetname = sourcefile.substr(pos + 1, pos2 - pos - 1);
+    string newFileName = targetfile + "/" + targetname + ".co";
     outFile.open(newFileName, ios::out | ios::binary);
     if (!outFile)
     {
@@ -202,7 +205,7 @@ bool compress_worker::decompress(string sourcePath, string destinationDir)
     string newFileName;
     char sourcefilepath[PATH_MAX];
     strcpy(sourcefilepath, sourcePath.substr(0, sourcePath.find_last_of(".")).c_str());
-    newFileName = destinationDir + '/' + basename(sourcefilepath);
+    newFileName = destinationDir + '/' + basename(sourcefilepath) + ".bo";
 
     // 打开目标文件
     ofstream outFile;

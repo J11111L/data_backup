@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <fstream>
+#include <libgen.h>
 #include <iostream>
 #include <unistd.h>
 #include <stdlib.h>

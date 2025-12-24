@@ -12,23 +12,37 @@ bool ADBackuper::backupLINK(string sourcefile, string targetfile)
     char buf[BUFFER_SIZE];
     struct timespec times[2];
     struct stat statbuf;
-    if (stat(sourcefile.c_str(), &statbuf) != 0)
+    if (lstat(sourcefile.c_str(), &statbuf) != 0)
     {
-        perror("link");
-        return -1;
+        QMessageBox::warning(nullptr, "错误", "无法获取源文件信息");
+        return false;
     }
-    readlink(sourcefile.c_str(), buf, sizeof(buf)); // 读取源链接
+    ssize_t len = readlink(sourcefile.c_str(), buf, sizeof(buf) - 1);
+    if(len == -1)
+    {
+        QMessageBox::warning(nullptr, "错误", "无法读取源链接");
+        return false;
+    }
+    buf[len] = '\0'; // 添加字符串终止符
+    unlink(targetfile.c_str());
+    
     if (symlink(buf, targetfile.c_str()) < 0)       // 复制源链接
     {
-        perror("link");
+        QMessageBox::warning(nullptr, "错误", "无法创建目标链接");
         return false;
     }
 
     // 保留元数据
     times[0] = statbuf.st_atim;
     times[1] = statbuf.st_mtim;
-    chown(targetfile.c_str(), statbuf.st_uid, statbuf.st_gid);
-    utimensat(AT_FDCWD, targetfile.c_str(), times, AT_SYMLINK_NOFOLLOW);
+    if(lchown(targetfile.c_str(), statbuf.st_uid, statbuf.st_gid) < 0)
+    {
+        QMessageBox::warning(nullptr, "错误", "无法更改目标链接所有者");
+    }
+    if(utimensat(AT_FDCWD, targetfile.c_str(), times, AT_SYMLINK_NOFOLLOW) < 0)
+    {
+        QMessageBox::warning(nullptr, "错误", "无法更改目标链接时间戳");
+    }
 
     return true;
 }

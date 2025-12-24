@@ -8,6 +8,11 @@
 #include"ui_backup.h"
 #include"ui_mainwindow.h"
 #include"ui_input.h"
+#include "advanced.h"
+#include "compressANDdecompress.h"
+#include "encryptANDdecrypt.h"
+#include "packANDunpack.h"
+#include "primary.h"
 
 class Controler : public QWidget
 {
@@ -21,6 +26,11 @@ private:
     input* m_input;
     MainWindow* m_mainWindow;
     backup* m_backup;
+    struct stat sbuf;
+    string targetFile;
+    string password;
+    char source_path[PATH_MAX];
+    primaryBackuper user;
 
     void kill();
 
@@ -37,6 +47,10 @@ private:
     void on_ChoosePath_Clicked();
 
     void on_MainWindow2backup_Clicked();
+
+    void on_backupButton_clicked();
+
+    void on_warn2backup_Clicked();
 
 };
 #endif // CONTROLER_H

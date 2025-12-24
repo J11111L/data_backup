@@ -20,7 +20,14 @@ SOURCES += \
     mainwindow.cpp \
     input.cpp \
     backup.cpp \
-    controler.cpp
+    controler.cpp \
+    primary.cpp \
+    advanced.cpp \
+    compressANDdecompress.cpp \
+    packANDunpack.cpp \
+    aes.cpp \
+    md5.cpp \
+    encryptANDdecrypt.cpp 
 
 
 HEADERS += \
@@ -29,12 +36,19 @@ HEADERS += \
     mainwindow.h \
     input.h \
     backup.h \
-    controler.h
+    controler.h \
+    primary.h \
+    advanced.h \
+    compressANDdecompress.h \
+    packANDunpack.h \
+    aes.h \
+    md5.h \
+    encryptANDdecrypt.h
 
 FORMS += \
     mainwindow.ui \
     input.ui \
-    backup.ui
+    backup.ui 
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

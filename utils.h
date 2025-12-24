@@ -7,27 +7,48 @@
 #include <QWidget>
 #include <QProcess>
 #include <QFileInfo>
+#include <QLineEdit>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QInputDialog>
 #include <QApplication>
 #include <QFileSystemModel>
-#include <iostream>
-#include <algorithm>
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string>
-#include <unistd.h>
-#include <fcntl.h>
-#include <dirent.h>
+
+#include <map>
+#include <queue>
 #include <time.h>
-#include <libgen.h>
 #include <vector>
+#include <string>
+#include <bitset>
+#include <cstdlib>
+#include <errno.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <fstream>
+#include <iostream>
+#include <unistd.h>
+#include <stdlib.h>
+#include <dirent.h>
+#include <libgen.h>
 #include <string.h>
+#include <algorithm>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <errno.h>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #endif // UTILS_H
